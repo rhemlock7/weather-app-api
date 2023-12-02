@@ -6,13 +6,23 @@
 header {
     margin: 0 auto;
     text-align: center;
-    background-color: rgba(83, 83, 170, 0.533);
 }
 
-main {
-    display: flex;
+header h1 {
+    padding: 15px 0;
 }
 
-#city-search-container, #weather-details-container {
-    margin: 15px;
+#city-search {
+    width: 100%;
+}
+
+#city-search-form {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(135, 135, 135, 0.919);
+}
+
+#city-search-button {
+    margin-top: 8px;
+    width: 100%;
+    border: none;
 }
