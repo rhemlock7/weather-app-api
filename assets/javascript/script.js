@@ -18,25 +18,29 @@ var queryURLTest = "http://api.openweathermap.org/data/2.5/weather?q=" + "philad
 var handleFormSubmit = function (event) {
     event.preventDefault();
 
-    city = citySearchInput.val();
+    cityInput = citySearchInput.val();
 
-    if (city) {
+    if (cityInput) {
         // Push value to the cityArray
-        cityArray.push(city)
+        cityArray.push(cityInput)
 
         // Save city in local storage
         localStorage.setItem("cities", JSON.stringify(cityArray))
     } else {
         alert("City input cannot be empty")
+        return;
     }
 
     // Create city list item
     var createLi = document.createElement('li');
-    createLi.textContent = city
+    createLi.textContent = cityInput
     createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
 
     //Append the li to the city list
     cityList.append(createLi) 
+
+    console.log(cityInput);
+    return cityInput;
 }
 
 // Function that adds each city as a list item under the city search form.
@@ -47,44 +51,42 @@ function displayCities() {
 
     if (storedCities != null) {
         cityArray = storedCities;
+    } else {
+        localStorage.setItem("cities", JSON.stringify(cityArray))
     }
 
-    for (i=0; i < storedCities.length; i++) {
-        // Create city list item
-        var createLi = document.createElement('li');
-        createLi.textContent = storedCities[i]
-        createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
-
-        //Append the li to the city list
-        cityList.append(createLi)   
+    if (storedCities.length != 0) {
+        for (i=0; i < storedCities.length; i++) {
+            // Create city list item
+            var createLi = document.createElement('li');
+            createLi.textContent = storedCities[i]
+            createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
+    
+            //Append the li to the city list
+            cityList.append(createLi)   
+        }
     }
+    
 }
 
 
-
-
-
-
-
-
-
 // Fetch the weather data and turn it into JSON data to be parsed & displayed on screen
-fetch(queryURLTest)
+fetch(queryURL)
     .then(function (response) {
         return response.json();
     })
     .then(function (data) {
         // Get specific data and store them in the variables below
-        var temp = data.main.temp;
-        var wind = data.wind.speed;
-        var humidity = data.main.humidity;
+        // var temp = data.main.temp;
+        // var wind = data.wind.speed;
+        // var humidity = data.main.humidity;
 
         // Create elements to display on screen
         // console.log('Fetch Response \n-------------');
         // console.log("Temp: " + temp)
         // console.log("Wind Speed: " + wind)
         // console.log("Humidity: " + humidity)
-        // console.log(data);
+        console.log(data);
 
         // TODO: Set the elements' text to be the weather data
 
@@ -96,3 +98,5 @@ citySearchForm.on('submit', handleFormSubmit);
 
 // Display locally stored cities on page load
 displayCities();
+console.log(city)
+console.log(typeof city)
