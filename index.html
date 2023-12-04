@@ -28,15 +28,12 @@
     <main class="row justify-content-center mt-4">
         <aside id="city-search-container" class="col-3 pe-4">
             <h2>Search For A City:</h2>
-            <form id="city-search-form" action="">
-                <input id="city-search" type="text" placeholder="Search cities">
-                <button id="city-search-button" class="bg-primary bg-gradient text-white py-1 px-5"
-                    type="submit">Search</button>
+            <form id="city-search-form">
+                <input id="city-search" class="ps-2" name="city-search" type="text" placeholder="Search cities">
+                <button id="city-search-button" class="bg-primary bg-gradient text-white py-1 px-5" type="submit">Search</button>
             </form>
             <div>
-                <ul id="selected-cities-list" class="list-group mt-3 rounded-0">
-                    <li class="list-group-item text-center text-white bg-black bg-gradient my-1">City</li>
-                </ul>
+                <ul id="selected-cities-list" class="list-group mt-3 rounded-0"></ul>
             </div>
         </aside>
 
