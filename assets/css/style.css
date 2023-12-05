@@ -36,6 +36,6 @@ p {
     border: none;
 }
 
-#current-weather-display {
+#current-weather-display, #five-day-forecast-container {
     display: none;
 }

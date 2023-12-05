@@ -4,7 +4,9 @@ var citySearchInput = $('#city-search')
 var cityList = $('#selected-cities-list')
 var clearListButton = $('#clear-list-button')
 var currentWeatherDisplay = $('#current-weather-display')
-var fiveDayForecast = $('#5-day-forecast-container');
+var fiveDayForecast = $('#five-day-forecast-container');
+var forecastDetailContainer = document.createElement('div');
+forecastDetailContainer.classList.add('row');
 
 // ----- City Array to fill with Local Storage ----- //
 var cityArray = [];
@@ -64,12 +66,12 @@ function displayCities() {
     if (storedCities.length != 0) {
         for (i = 0; i < storedCities.length; i++) {
             // Create city list item
-            var createLi = document.createElement('li');
-            createLi.textContent = storedCities[i]
-            createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
+            var createButton = document.createElement('button');
+            createButton.textContent = storedCities[i]
+            createButton.setAttribute("class", "list-group-item text-center text-white bg-black bg-gradient my-1")
 
             //Append the li to the city list
-            cityList.append(createLi)
+            cityList.append(createButton)
         }
     }
 }
@@ -107,6 +109,7 @@ function getWeatherData(url) {
 
             // Set the elements' text to be the weather data
             currentWeatherDisplay.css('display', 'block');
+            fiveDayForecast.css('display', 'block');
             weatherH2.classList.add("mb-4");
             weatherH2.textContent = "The current weather in " + data.name + ": " + data.weather[0].icon
             weatherParagraph1.textContent = "Temp: " + temp + "℉";
@@ -143,8 +146,11 @@ function getWeatherData(url) {
                 forecastDiv.append(forecastHumidity);
 
                 // Append the forecast container to the screen
-                fiveDayForecast.append(forecastDiv)
+                forecastDetailContainer.append(forecastDiv)
             }
+
+            // Append the container to the screen
+            fiveDayForecast.append(forecastDetailContainer);
         });
 }
 
