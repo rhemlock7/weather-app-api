@@ -3,6 +3,7 @@ var citySearchForm = $('#city-search-form')
 var citySearchInput = $('#city-search')
 var cityList = $('#selected-cities-list')
 var clearListButton = $('#clear-list-button')
+var currentWeatherDisplay = $('#current-weather-display')
 
 // ----- City Array to fill with Local Storage ----- //
 var cityArray = [];
@@ -98,8 +99,23 @@ function getWeatherData(url) {
             console.log(data);
 
             // TODO: Set the elements' text to be the weather data
+            var weatherH2 = document.createElement('h2');
+            var weatherParagraph1 = document.createElement('p');
+            var weatherParagraph2 = document.createElement('p');
+            var weatherParagraph3 = document.createElement('p');
+            currentWeatherDisplay.css('display', 'block');
+            weatherH2.classList.add("mb-4");
+            weatherH2.textContent = "The current weather in " + data.name + ": " + data.weather[0].icon
+            weatherParagraph1.textContent = "Temp: " + temp + "℉";
+            weatherParagraph2.textContent = "Wind Speed: " + wind + "mph";
+            weatherParagraph3.textContent = "Humidity : " + humidity;
+
 
             // TODO: Append the elements to be displayed on screen
+            currentWeatherDisplay.append(weatherH2);
+            currentWeatherDisplay.append(weatherParagraph1);
+            currentWeatherDisplay.append(weatherParagraph2);
+            currentWeatherDisplay.append(weatherParagraph3);
         });
 }
 
