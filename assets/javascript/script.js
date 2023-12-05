@@ -4,6 +4,7 @@ var citySearchInput = $('#city-search')
 var cityList = $('#selected-cities-list')
 var clearListButton = $('#clear-list-button')
 var currentWeatherDisplay = $('#current-weather-display')
+var fiveDayForecast = $('#5-day-forcast-container');
 
 // ----- City Array to fill with Local Storage ----- //
 var cityArray = [];
@@ -41,7 +42,7 @@ var handleFormSubmit = function (event) {
     city = cityInput;
 
     // API
-    queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&appid=" + APIkey + "&units=imperial";
+    queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&cnt=5&appid=" + APIkey + "&units=imperial";
 
     console.log(city);
     console.log(queryURL);
@@ -98,11 +99,15 @@ function getWeatherData(url) {
             console.log("Humidity: " + humidity)
             console.log(data);
 
-            // TODO: Set the elements' text to be the weather data
+            // Create the HTML elements to be displayed in the PRIMARY weather block
             var weatherH2 = document.createElement('h2');
             var weatherParagraph1 = document.createElement('p');
             var weatherParagraph2 = document.createElement('p');
             var weatherParagraph3 = document.createElement('p');
+            var forecastDiv = document.createElement('div');
+            forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-3');
+
+            // Set the elements' text to be the weather data
             currentWeatherDisplay.css('display', 'block');
             weatherH2.classList.add("mb-4");
             weatherH2.textContent = "The current weather in " + data.name + ": " + data.weather[0].icon
@@ -110,12 +115,33 @@ function getWeatherData(url) {
             weatherParagraph2.textContent = "Wind Speed: " + wind + "mph";
             weatherParagraph3.textContent = "Humidity : " + humidity;
 
-
-            // TODO: Append the elements to be displayed on screen
+            // Append the elements to be displayed on screen
             currentWeatherDisplay.append(weatherH2);
             currentWeatherDisplay.append(weatherParagraph1);
             currentWeatherDisplay.append(weatherParagraph2);
             currentWeatherDisplay.append(weatherParagraph3);
+            fiveDayForecast.append(forecastDiv)
+
+            // Create 5-Day forcast HTML elements
+            for (i=0; i < 5; i++) {
+                // Create HTML elements
+                var forecastH4 = document.createElement('h4');
+                var forecastTemp = document.createElement('p');
+                var forecastWind = document.createElement('p');
+                var forecastHumidity = document.createElement('p');
+
+                // Set text content of each element
+                forecastH4.textContent = "test h4"
+                forecastTemp.textContent = "test"
+                forecastWind.textContent = "test"
+                forecastHumidity.textContent = "test"
+
+                // Append elements to the 5-Day Forecast container
+                forecastDiv.append(forecastH4);
+                forecastDiv.append(forecastTemp);
+                forecastDiv.append(forecastWind);
+                forecastDiv.append(forecastHumidity);
+            }
         });
 }
 
