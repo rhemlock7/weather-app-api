@@ -12,6 +12,15 @@ header h1 {
     padding: 15px 0;
 }
 
+h4 {
+    margin-bottom: 15px;
+    border-bottom: 1px solid white;
+}
+
+p {
+    margin: 7px 0;
+}
+
 #city-search {
     width: 100%;
 }
