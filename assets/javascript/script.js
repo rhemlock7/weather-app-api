@@ -37,10 +37,10 @@ var handleFormSubmit = function (event) {
     //Append the li to the city list
     cityList.append(createLi)
 
-    city = cityInput.toLowerCase().replace(/ /g, '-');
+    city = cityInput;
 
     // API
-    queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey + "&units=imperial";
+    queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&appid=" + APIkey + "&units=imperial";
 
     console.log(city);
     console.log(queryURL);
