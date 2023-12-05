@@ -2,6 +2,7 @@
 var citySearchForm = $('#city-search-form')
 var citySearchInput = $('#city-search')
 var cityList = $('#selected-cities-list')
+var clearListButton = $('#clear-list-button')
 
 // ----- City Array to fill with Local Storage ----- //
 var cityArray = [];
@@ -9,10 +10,7 @@ var cityArray = [];
 // ----- Weather API ----- // 
 var APIkey = "d706a8baa5538ab15ced6f4891dbff96";
 var city;
-var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey + "&units=imperial";
-
-// ----- Test ----- //
-var queryURLTest = "http://api.openweathermap.org/data/2.5/weather?q=" + "philadelphia" + "&appid=" + APIkey + "&units=imperial";
+var queryURL;
 
 // Accept user input for city search form
 var handleFormSubmit = function (event) {
@@ -28,7 +26,7 @@ var handleFormSubmit = function (event) {
         localStorage.setItem("cities", JSON.stringify(cityArray))
     } else {
         alert("City input cannot be empty")
-        return;
+        return city;
     }
 
     // Create city list item
@@ -37,10 +35,16 @@ var handleFormSubmit = function (event) {
     createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
 
     //Append the li to the city list
-    cityList.append(createLi) 
+    cityList.append(createLi)
 
-    console.log(cityInput);
-    return cityInput;
+    city = cityInput.toLowerCase().replace(/ /g, '-');
+
+    // API
+    queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey + "&units=imperial";
+
+    console.log(city);
+    console.log(queryURL);
+    getWeatherData(queryURL)
 }
 
 // Function that adds each city as a list item under the city search form.
@@ -56,47 +60,52 @@ function displayCities() {
     }
 
     if (storedCities.length != 0) {
-        for (i=0; i < storedCities.length; i++) {
+        for (i = 0; i < storedCities.length; i++) {
             // Create city list item
             var createLi = document.createElement('li');
             createLi.textContent = storedCities[i]
             createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
-    
+
             //Append the li to the city list
-            cityList.append(createLi)   
+            cityList.append(createLi)
         }
     }
-    
+}
+
+function clearList() {
+    cityArray = [];
+    localStorage.setItem("cities", JSON.stringify(cityArray))
 }
 
 
 // Fetch the weather data and turn it into JSON data to be parsed & displayed on screen
-fetch(queryURL)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        // Get specific data and store them in the variables below
-        // var temp = data.main.temp;
-        // var wind = data.wind.speed;
-        // var humidity = data.main.humidity;
+function getWeatherData(url) {
+    fetch(url)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            // Get specific data and store them in the variables below
+            var temp = data.main.temp;
+            var wind = data.wind.speed;
+            var humidity = data.main.humidity;
 
-        // Create elements to display on screen
-        // console.log('Fetch Response \n-------------');
-        // console.log("Temp: " + temp)
-        // console.log("Wind Speed: " + wind)
-        // console.log("Humidity: " + humidity)
-        console.log(data);
+            // Create elements to display on screen
+            console.log('Fetch Response \n-------------');
+            console.log("Temp: " + temp)
+            console.log("Wind Speed: " + wind)
+            console.log("Humidity: " + humidity)
+            console.log(data);
 
-        // TODO: Set the elements' text to be the weather data
+            // TODO: Set the elements' text to be the weather data
 
-        // TODO: Append the elements to be displayed on screen
-    });
+            // TODO: Append the elements to be displayed on screen
+        });
+}
 
 // Handle city form submit button on page load
 citySearchForm.on('submit', handleFormSubmit);
+clearListButton.on('click', clearList)
 
 // Display locally stored cities on page load
 displayCities();
-console.log(city)
-console.log(typeof city)
