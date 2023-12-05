@@ -95,10 +95,8 @@ function clearList() {
 
 // Fetch the weather data and turn it into JSON data to be parsed & displayed on screen
 function getWeatherData(lat, lon) {
-    // fiveDayWeatherURL = "https://api.openweathermap.org/data/3.0/onecall?lat=" + lat + "&lon=" + lon + "&appid=d706a8baa5538ab15ced6f4891dbff96";
-    currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIkey}`
-    fiveDayWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}`
-    // "https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}"
+    currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIkey}&units=imperial`
+    fiveDayWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}&units=imperial`
     console.log(fiveDayWeatherURL)
 
     fetch(currentWeatherURL)
@@ -142,6 +140,7 @@ function getWeatherData(lat, lon) {
                 currentWeatherDisplay.append(weatherParagraph2);
                 currentWeatherDisplay.append(weatherParagraph3);
 
+                // Fetch 5-Day forecast and display the 5 cards
                 fetch(fiveDayWeatherURL)
                     .then(function (response) {
                         return response.json();
