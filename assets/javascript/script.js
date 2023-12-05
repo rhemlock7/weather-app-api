@@ -4,7 +4,7 @@ var citySearchInput = $('#city-search')
 var cityList = $('#selected-cities-list')
 var clearListButton = $('#clear-list-button')
 var currentWeatherDisplay = $('#current-weather-display')
-var fiveDayForecast = $('#5-day-forcast-container');
+var fiveDayForecast = $('#5-day-forecast-container');
 
 // ----- City Array to fill with Local Storage ----- //
 var cityArray = [];
@@ -104,8 +104,6 @@ function getWeatherData(url) {
             var weatherParagraph1 = document.createElement('p');
             var weatherParagraph2 = document.createElement('p');
             var weatherParagraph3 = document.createElement('p');
-            var forecastDiv = document.createElement('div');
-            forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-3');
 
             // Set the elements' text to be the weather data
             currentWeatherDisplay.css('display', 'block');
@@ -120,27 +118,32 @@ function getWeatherData(url) {
             currentWeatherDisplay.append(weatherParagraph1);
             currentWeatherDisplay.append(weatherParagraph2);
             currentWeatherDisplay.append(weatherParagraph3);
-            fiveDayForecast.append(forecastDiv)
+            
 
             // Create 5-Day forcast HTML elements
             for (i=0; i < 5; i++) {
                 // Create HTML elements
+                var forecastDiv = document.createElement('div');
+                forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
                 var forecastH4 = document.createElement('h4');
                 var forecastTemp = document.createElement('p');
                 var forecastWind = document.createElement('p');
                 var forecastHumidity = document.createElement('p');
 
                 // Set text content of each element
-                forecastH4.textContent = "test h4"
-                forecastTemp.textContent = "test"
-                forecastWind.textContent = "test"
-                forecastHumidity.textContent = "test"
+                forecastH4.textContent = "12/5/23"
+                forecastTemp.textContent = "Temp: "
+                forecastWind.textContent = "Wind: "
+                forecastHumidity.textContent = "Humidity: "
 
                 // Append elements to the 5-Day Forecast container
                 forecastDiv.append(forecastH4);
                 forecastDiv.append(forecastTemp);
                 forecastDiv.append(forecastWind);
                 forecastDiv.append(forecastHumidity);
+
+                // Append the forecast container to the screen
+                fiveDayForecast.append(forecastDiv)
             }
         });
 }
