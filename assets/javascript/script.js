@@ -246,7 +246,7 @@ function getWeatherData(lat, lon) {
                                 // Create HTML elements
                                 var forecastDiv = document.createElement('div');
                                 forecastDiv.setAttribute("id", "forecast-div")
-                                forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
+                                forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-xl-2', 'col-12' ,'m-2');
                                 var forecastH4 = document.createElement('h4');
                                 var forecastImg = document.createElement('img');
                                 var forecastTempEl = document.createElement('p');
@@ -276,17 +276,12 @@ function getWeatherData(lat, lon) {
                             fiveDayForecast.append(forecastDetailContainer);
                         });
                 } else {
-                    console.log("Data is here")
-
-                    // TODO ------------------------------------------------------
                     // REMOVE ELEMENTS FIRST
                     currentWeatherDisplay.contents().remove()
 
                     for (i = 0; i < 5; i++) {
                         $('#forecast-div').remove()
                     }
-
-                    // TODO ------------------------------------------------------
 
                     // Remove the no-data class and replace it with "data" class
                     weatherDetailsContainer.removeClass('no-data')
@@ -413,7 +408,7 @@ function getWeatherData(lat, lon) {
                             for (i = 0; i < 5; i++) {
                                 // Create HTML elements
                                 var forecastDiv = document.createElement('div');
-                                forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
+                                forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-xl-2', 'col-12' ,'m-2');
                                 forecastDiv.setAttribute("id", "forecast-div")
                                 var forecastH4 = document.createElement('h4');
                                 var forecastImg = document.createElement('img');
