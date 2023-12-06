@@ -147,6 +147,38 @@ function getWeatherData(lat, lon) {
                     })
                     .then(function (data) {
                         console.log(data);
+                        console.log(data.list);
+
+                        //var forecastWind = data.list[i].wind.speed;
+                        // var forecastHumidity = data.list[i].main.humidity;
+
+                        // Calculate average of Forecast Data in batches of 8. 40 data entries divided by groups of 8 equals 5 averages
+                        function weatherAverage(arr, num) {
+                            var averageForecast = [];
+
+                            for (let i = 0; i < arr.length; i = i + num) {
+                                var forecastTemp = arr[i].main.temp;
+                                var batch = arr.slice(i, i + num);
+                                console.log("batch: " + batch)
+                                var avg = batch.reduce((sum, time) => sum + time.main.temp, 0) / batch.length;
+
+                                // Round the average to two decimal places
+                                avg = Number(avg.toFixed(2));
+                                
+                                averageForecast.push(avg);
+                            }
+
+                            return averageForecast;
+                        }
+
+                        var forecastList = data.list;
+
+                        // Calling the function and store it in result
+                        var output = weatherAverage(forecastList, 8);
+                        console.log("Average of forecast weather array")
+                        console.log(output);
+
+                        // Turn 40 time slot increments into 5 daily averages
 
                         // Create 5-Day forcast HTML elements
                         for (i = 0; i < 5; i++) {
@@ -154,21 +186,21 @@ function getWeatherData(lat, lon) {
                             var forecastDiv = document.createElement('div');
                             forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
                             var forecastH4 = document.createElement('h4');
-                            var forecastTemp = document.createElement('p');
-                            var forecastWind = document.createElement('p');
-                            var forecastHumidity = document.createElement('p');
+                            var forecastTempEl = document.createElement('p');
+                            var forecastWindEl = document.createElement('p');
+                            var forecastHumidityEl = document.createElement('p');
 
                             // Set text content of each element
                             forecastH4.textContent = "12/5/23"
-                            forecastTemp.textContent = "Temp: "
-                            forecastWind.textContent = "Wind: "
-                            forecastHumidity.textContent = "Humidity: "
+                            forecastTempEl.textContent = "Temp: "
+                            forecastWindEl.textContent = "Wind: "
+                            forecastHumidityEl.textContent = "Humidity: "
 
                             // Append elements to the 5-Day Forecast container
                             forecastDiv.append(forecastH4);
-                            forecastDiv.append(forecastTemp);
-                            forecastDiv.append(forecastWind);
-                            forecastDiv.append(forecastHumidity);
+                            forecastDiv.append(forecastTempEl);
+                            forecastDiv.append(forecastWindEl);
+                            forecastDiv.append(forecastHumidityEl);
 
                             // Append the forecast container to the screen
                             forecastDetailContainer.append(forecastDiv)
