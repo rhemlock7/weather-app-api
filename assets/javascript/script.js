@@ -191,10 +191,21 @@ function getWeatherData(lat, lon) {
 
                         // Extracting 'main.humidity' = Humidity Averages
                         var humidityAverages = weatherAverage(forecastList, 8, (day) => day.main.humidity);
-                        console.log("Average of forecast wind speeds");
+                        console.log("Average of forecast humidity readings");
                         console.log(humidityAverages);
 
-                        // Turn 40 time slot increments into 5 daily averages
+                        // Loop through data and pull dates
+                        var forecastDates = [];
+
+
+                        for (i=0; i < forecastList.length; i = i + 8) {
+                            var date = forecastList[i].dt_txt;
+
+                            // Format Date
+                            var formattedDate = dayjs(date.substr(0, 10)).format("M/D/YY");
+                            forecastDates.push(formattedDate);
+                        }
+
 
                         // Create 5-Day forcast HTML elements
                         for (i = 0; i < 5; i++) {
@@ -207,10 +218,10 @@ function getWeatherData(lat, lon) {
                             var forecastHumidityEl = document.createElement('p');
 
                             // Set text content of each element
-                            forecastH4.textContent = "12/5/23"
-                            forecastTempEl.textContent = "Temp: "
-                            forecastWindEl.textContent = "Wind: "
-                            forecastHumidityEl.textContent = "Humidity: "
+                            forecastH4.textContent = forecastDates[i];
+                            forecastTempEl.textContent = "Temp: " + tempAverages[i] + "℉";
+                            forecastWindEl.textContent = "Wind: " + windAverages[i] + "mph";
+                            forecastHumidityEl.textContent = "Humidity: " + humidityAverages[i];
 
                             // Append elements to the 5-Day Forecast container
                             forecastDiv.append(forecastH4);
