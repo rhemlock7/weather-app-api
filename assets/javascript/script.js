@@ -153,19 +153,25 @@ function getWeatherData(lat, lon) {
                         // var forecastHumidity = data.list[i].main.humidity;
 
                         // Calculate average of Forecast Data in batches of 8. 40 data entries divided by groups of 8 equals 5 averages
-                        function weatherAverage(arr, num) {
+                        function weatherAverage(arr, num, dataExtractor) {
                             var averageForecast = [];
 
-                            for (let i = 0; i < arr.length; i = i + num) {
-                                var forecastTemp = arr[i].main.temp;
-                                var batch = arr.slice(i, i + num);
-                                console.log("batch: " + batch)
-                                var avg = batch.reduce((sum, time) => sum + time.main.temp, 0) / batch.length;
+                            // Ensure there are enough elements to form batches
+                            if (arr.length >= num) {
+                                // Adjust the loop condition to iterate in batches of 'num'
+                                for (let i = 0; i < arr.length; i = i + num) {
+                                    var batch = arr.slice(i, i + num);
 
-                                // Round the average to two decimal places
-                                avg = Number(avg.toFixed(2));
-                                
-                                averageForecast.push(avg);
+                                    // Calculate the average data for the batch
+                                    var avg = batch.reduce((sum, day) => sum + dataExtractor(day), 0) / batch.length;
+
+                                    // Round the average to two decimal places
+                                    avg = Number(avg.toFixed(2));
+
+                                    averageForecast.push(avg);
+                                }
+                            } else {
+                                console.error('Not enough elements in the array to form batches.');
                             }
 
                             return averageForecast;
@@ -173,10 +179,20 @@ function getWeatherData(lat, lon) {
 
                         var forecastList = data.list;
 
-                        // Calling the function and store it in result
-                        var output = weatherAverage(forecastList, 8);
-                        console.log("Average of forecast weather array")
-                        console.log(output);
+                        // Extracting 'main.temp' = Average temperatures
+                        var tempAverages = weatherAverage(forecastList, 8, (day) => day.main.temp);
+                        console.log("Average of forecast temperatures");
+                        console.log(tempAverages);
+
+                        // Extracting 'wind.speed' = Average wind speeds
+                        var windAverages = weatherAverage(forecastList, 8, (day) => day.wind.speed);
+                        console.log("Average of forecast wind speeds");
+                        console.log(windAverages);
+
+                        // Extracting 'main.humidity' = Humidity Averages
+                        var humidityAverages = weatherAverage(forecastList, 8, (day) => day.main.humidity);
+                        console.log("Average of forecast wind speeds");
+                        console.log(humidityAverages);
 
                         // Turn 40 time slot increments into 5 daily averages
 
