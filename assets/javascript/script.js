@@ -242,6 +242,7 @@ function getWeatherData(lat, lon) {
                             for (i = 0; i < 5; i++) {
                                 // Create HTML elements
                                 var forecastDiv = document.createElement('div');
+                                forecastDiv.setAttribute("id", "forecast-div")
                                 forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
                                 var forecastH4 = document.createElement('h4');
                                 var forecastImg = document.createElement('img');
@@ -273,6 +274,173 @@ function getWeatherData(lat, lon) {
                         });
                 } else {
                     console.log("Data is here")
+
+                    // TODO ------------------------------------------------------
+                    // REMOVE ELEMENTS FIRST
+                    currentWeatherDisplay.contents().remove()
+
+                    for (i=0; i < 5; i++) {
+                        $('#forecast-div').remove()
+                    }
+
+                    // TODO ------------------------------------------------------
+
+                    // Remove the no-data class and replace it with "data" class
+                    weatherDetailsContainer.removeClass('no-data')
+                    weatherDetailsContainer.addClass('data')
+
+
+                    // Get specific data and store them in the variables below
+                    var temp = currentData.main.temp;
+                    var wind = currentData.wind.speed;
+                    var humidity = currentData.main.humidity;
+
+                    // Create elements to display on screen
+                    console.log('Fetch Response \n-------------');
+                    console.log("Temp: " + temp)
+                    console.log("Wind Speed: " + wind)
+                    console.log("Humidity: " + humidity)
+
+
+                    // Create the HTML elements to be displayed in the PRIMARY weather block
+                    var weatherH2 = document.createElement('h2');
+                    var currentDateH3 = document.createElement('h3');
+                    var currentWeatherIcon = document.createElement('img');
+                    var weatherParagraph1 = document.createElement('p');
+                    var weatherParagraph2 = document.createElement('p');
+                    var weatherParagraph3 = document.createElement('p');
+
+                    var currentDataIcon = currentData.weather[0].icon;
+                    var iconAlt = currentData.weather[0].description;
+
+                    // Set the elements' text to be the weather currentData
+                    currentWeatherDisplay.css('display', 'block');
+                    fiveDayForecast.css('display', 'block');
+                    weatherH2.classList.add("mb-4");
+                    currentWeatherIcon.setAttribute("src", "https://openweathermap.org/img/wn/" + currentDataIcon + ".png")
+                    currentWeatherIcon.setAttribute("alt", iconAlt)
+                    currentWeatherIcon.setAttribute("style", "padding-bottom:10px")
+                    weatherH2.textContent = "The current weather in " + currentData.name + ": " + currentData.weather[0].main;
+                    currentDateH3.textContent = dayjs().format("dddd, MMM D, YYYY")
+                    weatherParagraph1.textContent = "Temp: " + temp + "℉";
+                    weatherParagraph2.textContent = "Wind Speed: " + wind + "mph";
+                    weatherParagraph3.textContent = "Humidity : " + humidity + "g/kg";
+
+                    // Append the elements to be displayed on screen
+                    currentWeatherDisplay.append(weatherH2);
+                    currentWeatherDisplay.append(currentDateH3);
+                    currentWeatherDisplay.append(currentWeatherIcon);
+                    currentWeatherDisplay.append(weatherParagraph1);
+                    currentWeatherDisplay.append(weatherParagraph2);
+                    currentWeatherDisplay.append(weatherParagraph3);
+
+                    // Fetch 5-Day forecast and display the 5 cards
+                    fetch(fiveDayWeatherURL)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+                            console.log(data);
+                            console.log(data.list);
+
+                            //var forecastWind = data.list[i].wind.speed;
+                            // var forecastHumidity = data.list[i].main.humidity;
+
+                            // Calculate average of Forecast Data in batches of 8. 40 data entries divided by groups of 8 equals 5 averages
+                            function weatherAverage(arr, num, dataExtractor) {
+                                var averageForecast = [];
+
+                                // Ensure there are enough elements to form batches
+                                if (arr.length >= num) {
+                                    // Adjust the loop condition to iterate in batches of 'num'
+                                    for (let i = 0; i < arr.length; i = i + num) {
+                                        var batch = arr.slice(i, i + num);
+
+                                        // Calculate the average data for the batch
+                                        var avg = batch.reduce((sum, day) => sum + dataExtractor(day), 0) / batch.length;
+
+                                        // Round the average to two decimal places
+                                        avg = Number(avg.toFixed(2));
+
+                                        averageForecast.push(avg);
+                                    }
+                                } else {
+                                    console.error('Not enough elements in the array to form batches.');
+                                }
+
+                                return averageForecast;
+                            }
+
+                            var forecastList = data.list;
+
+                            // Extracting 'main.temp' = Average temperatures
+                            var tempAverages = weatherAverage(forecastList, 8, (day) => day.main.temp);
+                            console.log("Average of forecast temperatures");
+                            console.log(tempAverages);
+
+                            // Extracting 'wind.speed' = Average wind speeds
+                            var windAverages = weatherAverage(forecastList, 8, (day) => day.wind.speed);
+                            console.log("Average of forecast wind speeds");
+                            console.log(windAverages);
+
+                            // Extracting 'main.humidity' = Humidity Averages
+                            var humidityAverages = weatherAverage(forecastList, 8, (day) => day.main.humidity);
+                            console.log("Average of forecast humidity readings");
+                            console.log(humidityAverages);
+
+                            // Loop through data and pull dates
+                            var forecastDates = [];
+                            var forecastIcons = [];
+                            var forecastIconAlt = []
+
+                            for (i = 0; i < forecastList.length; i = i + 8) {
+                                var date = forecastList[i].dt_txt;
+                                var icon = forecastList[i].weather[0].icon;
+                                var alt = forecastList[i].weather[0].main;
+
+                                // Format Date
+                                var formattedDate = dayjs(date.substr(0, 10)).format("M/D/YY");
+                                forecastDates.push(formattedDate);
+
+                                forecastIcons.push(icon);
+                                forecastIconAlt.push(alt)
+                            }
+
+                            // Create 5-Day forcast HTML elements
+                            for (i = 0; i < 5; i++) {
+                                // Create HTML elements
+                                var forecastDiv = document.createElement('div');
+                                forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
+                                forecastDiv.setAttribute("id", "forecast-div")
+                                var forecastH4 = document.createElement('h4');
+                                var forecastImg = document.createElement('img');
+                                var forecastTempEl = document.createElement('p');
+                                var forecastWindEl = document.createElement('p');
+                                var forecastHumidityEl = document.createElement('p');
+
+                                // Set text content of each element
+                                forecastH4.textContent = forecastDates[i];
+                                forecastImg.setAttribute("src", "https://openweathermap.org/img/wn/" + forecastIcons[i] + ".png")
+                                forecastImg.setAttribute("alt", forecastIconAlt[i])
+                                forecastTempEl.textContent = "Temp: " + tempAverages[i] + "℉";
+                                forecastWindEl.textContent = "Wind: " + windAverages[i] + "mph";
+                                forecastHumidityEl.textContent = "Humidity: " + humidityAverages[i] + "g/kg";
+
+                                // Append elements to the 5-Day Forecast container
+                                forecastDiv.append(forecastH4);
+                                forecastDiv.append(forecastImg);
+                                forecastDiv.append(forecastTempEl);
+                                forecastDiv.append(forecastWindEl);
+                                forecastDiv.append(forecastHumidityEl);
+
+                                // Append the forecast container to the screen
+                                forecastDetailContainer.append(forecastDiv)
+                            }
+
+                            // Append the container to the screen
+                            fiveDayForecast.append(forecastDetailContainer);
+                        });
+                    
                 }
 
             } else {
