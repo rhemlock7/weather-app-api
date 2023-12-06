@@ -7,6 +7,7 @@ var currentWeatherDisplay = $('#current-weather-display')
 var fiveDayForecast = $('#five-day-forecast-container');
 var forecastDetailContainer = document.createElement('div');
 forecastDetailContainer.classList.add('row');
+var cityButtonId = $('#city-button')
 
 // ----- City Array to fill with Local Storage ----- //
 var cityArray = [];
@@ -33,12 +34,14 @@ var handleFormSubmit = function (event) {
     }
 
     // Create city list item
-    var createLi = document.createElement('li');
-    createLi.textContent = cityInput
-    createLi.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
+    var createButton = document.createElement('button');
+    createButton.textContent = cityInput
+    createButton.setAttribute("data-city", cityInput)
+    createButton.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
+
 
     //Append the li to the city list
-    cityList.append(createLi)
+    cityList.append(createButton)
 
     city = cityInput.toLowerCase();
 
@@ -79,6 +82,8 @@ function displayCities() {
             // Create city list item
             var createButton = document.createElement('button');
             createButton.textContent = storedCities[i]
+            createButton.setAttribute("id", "city-button")
+            createButton.setAttribute("data-city", storedCities[i])
             createButton.setAttribute("class", "list-group-item text-center text-white bg-black bg-gradient my-1")
 
             //Append the li to the city list
@@ -266,6 +271,30 @@ function getWeatherData(lat, lon) {
 // Handle city form submit button on page load
 citySearchForm.on('submit', handleFormSubmit);
 clearListButton.on('click', clearList)
+
+// Displaying weather data on city button click
+cityList.on('click', 'button', function(button){
+    var clickedButtonValue = $(button.target).attr("data-city");
+    console.log("clicked: " + clickedButtonValue)
+
+    // API
+    locationCoordinates = "https://api.openweathermap.org/geo/1.0/direct?q=" + clickedButtonValue + "&appid=" + APIkey;
+    console.log(locationCoordinates)
+
+    // fetch with locationCoordinates url
+    fetch(locationCoordinates)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data[0])
+            latitude = data[0].lat;
+            console.log("lat: " + latitude)
+            longitude = data[0].lon;
+            console.log("lon: " + longitude)
+            getWeatherData(latitude, longitude)
+        })
+})
 
 // Display locally stored cities on page load
 displayCities();

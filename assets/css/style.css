@@ -39,3 +39,11 @@ p {
 #current-weather-display, #five-day-forecast-container {
     display: none;
 }
+
+#city-button{
+    transition: all 200ms ease;
+}
+
+#city-button:hover {
+    transform: scale(1.1);
+}
