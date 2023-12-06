@@ -121,21 +121,29 @@ function getWeatherData(lat, lon) {
 
                 // Create the HTML elements to be displayed in the PRIMARY weather block
                 var weatherH2 = document.createElement('h2');
+                var currentWeatherIcon = document.createElement('img');
                 var weatherParagraph1 = document.createElement('p');
                 var weatherParagraph2 = document.createElement('p');
                 var weatherParagraph3 = document.createElement('p');
+
+                var currentDataIcon = currentData.weather[0].icon;
+                var iconAlt = currentData.weather[0].description;
 
                 // Set the elements' text to be the weather currentData
                 currentWeatherDisplay.css('display', 'block');
                 fiveDayForecast.css('display', 'block');
                 weatherH2.classList.add("mb-4");
-                weatherH2.textContent = "The current weather in " + currentData.name + ": " + currentData.weather[0].icon
+                currentWeatherIcon.setAttribute("src", "https://openweathermap.org/img/wn/" + currentDataIcon + ".png")
+                currentWeatherIcon.setAttribute("alt", iconAlt)
+                currentWeatherIcon.setAttribute("style", "padding-bottom:10px")
+                weatherH2.textContent = "The current weather in " + currentData.name + ": " + currentData.weather[0].main;
                 weatherParagraph1.textContent = "Temp: " + temp + "℉";
                 weatherParagraph2.textContent = "Wind Speed: " + wind + "mph";
-                weatherParagraph3.textContent = "Humidity : " + humidity;
+                weatherParagraph3.textContent = "Humidity : " + humidity + "g/kg";
 
                 // Append the elements to be displayed on screen
                 currentWeatherDisplay.append(weatherH2);
+                currentWeatherDisplay.append(currentWeatherIcon);
                 currentWeatherDisplay.append(weatherParagraph1);
                 currentWeatherDisplay.append(weatherParagraph2);
                 currentWeatherDisplay.append(weatherParagraph3);
@@ -196,16 +204,23 @@ function getWeatherData(lat, lon) {
 
                         // Loop through data and pull dates
                         var forecastDates = [];
+                        var forecastIcons = [];
+                        var forecastIconAlt = []
 
-
+                        // TODO ------------------------------------------------------------------------------------
                         for (i=0; i < forecastList.length; i = i + 8) {
                             var date = forecastList[i].dt_txt;
+                            var icon = forecastList[i].weather[0].icon;
+                            var alt = forecastList[i].weather[0].main;
 
                             // Format Date
                             var formattedDate = dayjs(date.substr(0, 10)).format("M/D/YY");
                             forecastDates.push(formattedDate);
-                        }
 
+                            forecastIcons.push(icon);
+                            forecastIconAlt.push(alt)
+                        }
+                        // TODO ------------------------------------------------------------------------------------
 
                         // Create 5-Day forcast HTML elements
                         for (i = 0; i < 5; i++) {
@@ -213,18 +228,22 @@ function getWeatherData(lat, lon) {
                             var forecastDiv = document.createElement('div');
                             forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
                             var forecastH4 = document.createElement('h4');
+                            var forecastImg = document.createElement('img');
                             var forecastTempEl = document.createElement('p');
                             var forecastWindEl = document.createElement('p');
                             var forecastHumidityEl = document.createElement('p');
 
                             // Set text content of each element
                             forecastH4.textContent = forecastDates[i];
+                            forecastImg.setAttribute("src", "https://openweathermap.org/img/wn/" + forecastIcons[i] + ".png")
+                            forecastImg.setAttribute("alt", forecastIconAlt[i])
                             forecastTempEl.textContent = "Temp: " + tempAverages[i] + "℉";
                             forecastWindEl.textContent = "Wind: " + windAverages[i] + "mph";
-                            forecastHumidityEl.textContent = "Humidity: " + humidityAverages[i];
+                            forecastHumidityEl.textContent = "Humidity: " + humidityAverages[i] + "g/kg";
 
                             // Append elements to the 5-Day Forecast container
                             forecastDiv.append(forecastH4);
+                            forecastDiv.append(forecastImg);
                             forecastDiv.append(forecastTempEl);
                             forecastDiv.append(forecastWindEl);
                             forecastDiv.append(forecastHumidityEl);
