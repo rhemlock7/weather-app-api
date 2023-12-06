@@ -22,30 +22,33 @@ var handleFormSubmit = function (event) {
     event.preventDefault();
 
     cityInput = citySearchInput.val();
+    city = cityInput.toLowerCase()
+        .split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ');
 
-    if (cityInput) {
-        // Push value to the cityArray
-        cityArray.push(cityInput)
+    if (city) {
+        if (cityArray.includes(city) === false) {
+            // Push value to the cityArray
+            cityArray.push(city)
+            // Save city in local storage
+            localStorage.setItem("cities", JSON.stringify(cityArray))
 
-        // Save city in local storage
-        localStorage.setItem("cities", JSON.stringify(cityArray))
+            // Create city button
+            var createButton = document.createElement('button');
+            createButton.textContent = city
+            createButton.setAttribute("data-city", city)
+            createButton.setAttribute("id", "city-button")
+            createButton.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
+
+
+            //Append the li to the city list
+            cityList.append(createButton)
+        }
     } else {
         alert("City input cannot be empty")
-        return city;
+        return;
     }
-
-    // Create city button
-    var createButton = document.createElement('button');
-    createButton.textContent = cityInput
-    createButton.setAttribute("data-city", cityInput)
-    createButton.setAttribute("id", "city-button")
-    createButton.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
-
-
-    //Append the li to the city list
-    cityList.append(createButton)
-
-    city = cityInput.toLowerCase();
 
     // API
     locationCoordinates = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + APIkey;
@@ -279,7 +282,7 @@ function getWeatherData(lat, lon) {
                     // REMOVE ELEMENTS FIRST
                     currentWeatherDisplay.contents().remove()
 
-                    for (i=0; i < 5; i++) {
+                    for (i = 0; i < 5; i++) {
                         $('#forecast-div').remove()
                     }
 
@@ -440,7 +443,7 @@ function getWeatherData(lat, lon) {
                             // Append the container to the screen
                             fiveDayForecast.append(forecastDetailContainer);
                         });
-                    
+
                 }
 
             } else {
