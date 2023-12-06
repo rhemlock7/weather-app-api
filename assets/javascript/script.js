@@ -33,10 +33,11 @@ var handleFormSubmit = function (event) {
         return city;
     }
 
-    // Create city list item
+    // Create city button
     var createButton = document.createElement('button');
     createButton.textContent = cityInput
     createButton.setAttribute("data-city", cityInput)
+    createButton.setAttribute("id", "city-button")
     createButton.classList.add("list-group-item", "text-center", "text-white", "bg-black", "bg-gradient", "my-1")
 
 
