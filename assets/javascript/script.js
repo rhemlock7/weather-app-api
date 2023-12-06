@@ -52,7 +52,6 @@ var handleFormSubmit = function (event) {
 
     // API
     locationCoordinates = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + APIkey;
-    console.log(locationCoordinates)
 
     // fetch with locationCoordinates url
     fetch(locationCoordinates)
@@ -60,11 +59,8 @@ var handleFormSubmit = function (event) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data[0])
             latitude = data[0].lat;
-            console.log("lat: " + latitude)
             longitude = data[0].lon;
-            console.log("lon: " + longitude)
             getWeatherData(latitude, longitude)
         })
 
@@ -73,8 +69,6 @@ var handleFormSubmit = function (event) {
 // Function that adds each city as a list item under the city search form.
 function displayCities() {
     let storedCities = JSON.parse(localStorage.getItem("cities"));
-    // console.log(storedCities)
-    // console.log(storedCities.length)
 
     if (storedCities != null) {
         cityArray = storedCities;
@@ -107,14 +101,12 @@ function clearList() {
 function getWeatherData(lat, lon) {
     currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIkey}&units=imperial`
     fiveDayWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}&units=imperial`
-    console.log(fiveDayWeatherURL)
 
     fetch(currentWeatherURL)
         .then(function (response) {
             return response.json();
         })
         .then(function (currentData) {
-            console.log(currentData);
 
             if (currentData) {
 
@@ -131,10 +123,6 @@ function getWeatherData(lat, lon) {
                     var humidity = currentData.main.humidity;
 
                     // Create elements to display on screen
-                    console.log('Fetch Response \n-------------');
-                    console.log("Temp: " + temp)
-                    console.log("Wind Speed: " + wind)
-                    console.log("Humidity: " + humidity)
 
 
                     // Create the HTML elements to be displayed in the PRIMARY weather block
@@ -175,11 +163,6 @@ function getWeatherData(lat, lon) {
                             return response.json();
                         })
                         .then(function (data) {
-                            console.log(data);
-                            console.log(data.list);
-
-                            //var forecastWind = data.list[i].wind.speed;
-                            // var forecastHumidity = data.list[i].main.humidity;
 
                             // Calculate average of Forecast Data in batches of 8. 40 data entries divided by groups of 8 equals 5 averages
                             function weatherAverage(arr, num, dataExtractor) {
@@ -210,18 +193,12 @@ function getWeatherData(lat, lon) {
 
                             // Extracting 'main.temp' = Average temperatures
                             var tempAverages = weatherAverage(forecastList, 8, (day) => day.main.temp);
-                            console.log("Average of forecast temperatures");
-                            console.log(tempAverages);
 
                             // Extracting 'wind.speed' = Average wind speeds
                             var windAverages = weatherAverage(forecastList, 8, (day) => day.wind.speed);
-                            console.log("Average of forecast wind speeds");
-                            console.log(windAverages);
 
                             // Extracting 'main.humidity' = Humidity Averages
                             var humidityAverages = weatherAverage(forecastList, 8, (day) => day.main.humidity);
-                            console.log("Average of forecast humidity readings");
-                            console.log(humidityAverages);
 
                             // Loop through data and pull dates
                             var forecastDates = [];
@@ -294,10 +271,6 @@ function getWeatherData(lat, lon) {
                     var humidity = currentData.main.humidity;
 
                     // Create elements to display on screen
-                    console.log('Fetch Response \n-------------');
-                    console.log("Temp: " + temp)
-                    console.log("Wind Speed: " + wind)
-                    console.log("Humidity: " + humidity)
 
 
                     // Create the HTML elements to be displayed in the PRIMARY weather block
@@ -338,11 +311,6 @@ function getWeatherData(lat, lon) {
                             return response.json();
                         })
                         .then(function (data) {
-                            console.log(data);
-                            console.log(data.list);
-
-                            //var forecastWind = data.list[i].wind.speed;
-                            // var forecastHumidity = data.list[i].main.humidity;
 
                             // Calculate average of Forecast Data in batches of 8. 40 data entries divided by groups of 8 equals 5 averages
                             function weatherAverage(arr, num, dataExtractor) {
@@ -373,18 +341,12 @@ function getWeatherData(lat, lon) {
 
                             // Extracting 'main.temp' = Average temperatures
                             var tempAverages = weatherAverage(forecastList, 8, (day) => day.main.temp);
-                            console.log("Average of forecast temperatures");
-                            console.log(tempAverages);
 
                             // Extracting 'wind.speed' = Average wind speeds
                             var windAverages = weatherAverage(forecastList, 8, (day) => day.wind.speed);
-                            console.log("Average of forecast wind speeds");
-                            console.log(windAverages);
 
                             // Extracting 'main.humidity' = Humidity Averages
                             var humidityAverages = weatherAverage(forecastList, 8, (day) => day.main.humidity);
-                            console.log("Average of forecast humidity readings");
-                            console.log(humidityAverages);
 
                             // Loop through data and pull dates
                             var forecastDates = [];
@@ -455,11 +417,9 @@ clearListButton.on('click', clearList)
 // Displaying weather data on city button click
 cityList.on('click', 'button', function (button) {
     var clickedButtonValue = $(button.target).attr("data-city");
-    console.log("clicked: " + clickedButtonValue)
 
     // API
     locationCoordinates = "https://api.openweathermap.org/geo/1.0/direct?q=" + clickedButtonValue + "&appid=" + APIkey;
-    console.log(locationCoordinates)
 
     // fetch with locationCoordinates url
     fetch(locationCoordinates)
@@ -467,11 +427,8 @@ cityList.on('click', 'button', function (button) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data[0])
             latitude = data[0].lat;
-            console.log("lat: " + latitude)
             longitude = data[0].lon;
-            console.log("lon: " + longitude)
             getWeatherData(latitude, longitude)
         })
 })
