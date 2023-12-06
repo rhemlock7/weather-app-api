@@ -121,6 +121,7 @@ function getWeatherData(lat, lon) {
 
                 // Create the HTML elements to be displayed in the PRIMARY weather block
                 var weatherH2 = document.createElement('h2');
+                var currentDateH3 = document.createElement('h3');
                 var currentWeatherIcon = document.createElement('img');
                 var weatherParagraph1 = document.createElement('p');
                 var weatherParagraph2 = document.createElement('p');
@@ -137,12 +138,14 @@ function getWeatherData(lat, lon) {
                 currentWeatherIcon.setAttribute("alt", iconAlt)
                 currentWeatherIcon.setAttribute("style", "padding-bottom:10px")
                 weatherH2.textContent = "The current weather in " + currentData.name + ": " + currentData.weather[0].main;
+                currentDateH3.textContent = dayjs().format("dddd, MMM D, YYYY")
                 weatherParagraph1.textContent = "Temp: " + temp + "℉";
                 weatherParagraph2.textContent = "Wind Speed: " + wind + "mph";
                 weatherParagraph3.textContent = "Humidity : " + humidity + "g/kg";
 
                 // Append the elements to be displayed on screen
                 currentWeatherDisplay.append(weatherH2);
+                currentWeatherDisplay.append(currentDateH3);
                 currentWeatherDisplay.append(currentWeatherIcon);
                 currentWeatherDisplay.append(weatherParagraph1);
                 currentWeatherDisplay.append(weatherParagraph2);
@@ -207,7 +210,6 @@ function getWeatherData(lat, lon) {
                         var forecastIcons = [];
                         var forecastIconAlt = []
 
-                        // TODO ------------------------------------------------------------------------------------
                         for (i=0; i < forecastList.length; i = i + 8) {
                             var date = forecastList[i].dt_txt;
                             var icon = forecastList[i].weather[0].icon;
@@ -220,7 +222,6 @@ function getWeatherData(lat, lon) {
                             forecastIcons.push(icon);
                             forecastIconAlt.push(alt)
                         }
-                        // TODO ------------------------------------------------------------------------------------
 
                         // Create 5-Day forcast HTML elements
                         for (i = 0; i < 5; i++) {
