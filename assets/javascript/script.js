@@ -95,10 +95,8 @@ function clearList() {
 
 // Fetch the weather data and turn it into JSON data to be parsed & displayed on screen
 function getWeatherData(lat, lon) {
-    // fiveDayWeatherURL = "https://api.openweathermap.org/data/3.0/onecall?lat=" + lat + "&lon=" + lon + "&appid=d706a8baa5538ab15ced6f4891dbff96";
-    currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIkey}`
-    fiveDayWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}`
-    // "https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}"
+    currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIkey}&units=imperial`
+    fiveDayWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIkey}&units=imperial`
     console.log(fiveDayWeatherURL)
 
     fetch(currentWeatherURL)
@@ -142,12 +140,61 @@ function getWeatherData(lat, lon) {
                 currentWeatherDisplay.append(weatherParagraph2);
                 currentWeatherDisplay.append(weatherParagraph3);
 
+                // Fetch 5-Day forecast and display the 5 cards
                 fetch(fiveDayWeatherURL)
                     .then(function (response) {
                         return response.json();
                     })
                     .then(function (data) {
                         console.log(data);
+                        console.log(data.list);
+
+                        //var forecastWind = data.list[i].wind.speed;
+                        // var forecastHumidity = data.list[i].main.humidity;
+
+                        // Calculate average of Forecast Data in batches of 8. 40 data entries divided by groups of 8 equals 5 averages
+                        function weatherAverage(arr, num, dataExtractor) {
+                            var averageForecast = [];
+
+                            // Ensure there are enough elements to form batches
+                            if (arr.length >= num) {
+                                // Adjust the loop condition to iterate in batches of 'num'
+                                for (let i = 0; i < arr.length; i = i + num) {
+                                    var batch = arr.slice(i, i + num);
+
+                                    // Calculate the average data for the batch
+                                    var avg = batch.reduce((sum, day) => sum + dataExtractor(day), 0) / batch.length;
+
+                                    // Round the average to two decimal places
+                                    avg = Number(avg.toFixed(2));
+
+                                    averageForecast.push(avg);
+                                }
+                            } else {
+                                console.error('Not enough elements in the array to form batches.');
+                            }
+
+                            return averageForecast;
+                        }
+
+                        var forecastList = data.list;
+
+                        // Extracting 'main.temp' = Average temperatures
+                        var tempAverages = weatherAverage(forecastList, 8, (day) => day.main.temp);
+                        console.log("Average of forecast temperatures");
+                        console.log(tempAverages);
+
+                        // Extracting 'wind.speed' = Average wind speeds
+                        var windAverages = weatherAverage(forecastList, 8, (day) => day.wind.speed);
+                        console.log("Average of forecast wind speeds");
+                        console.log(windAverages);
+
+                        // Extracting 'main.humidity' = Humidity Averages
+                        var humidityAverages = weatherAverage(forecastList, 8, (day) => day.main.humidity);
+                        console.log("Average of forecast wind speeds");
+                        console.log(humidityAverages);
+
+                        // Turn 40 time slot increments into 5 daily averages
 
                         // Create 5-Day forcast HTML elements
                         for (i = 0; i < 5; i++) {
@@ -155,21 +202,21 @@ function getWeatherData(lat, lon) {
                             var forecastDiv = document.createElement('div');
                             forecastDiv.classList.add('bg-black', 'bg-gradient', 'text-white', 'p-2', 'col-2', 'mx-2');
                             var forecastH4 = document.createElement('h4');
-                            var forecastTemp = document.createElement('p');
-                            var forecastWind = document.createElement('p');
-                            var forecastHumidity = document.createElement('p');
+                            var forecastTempEl = document.createElement('p');
+                            var forecastWindEl = document.createElement('p');
+                            var forecastHumidityEl = document.createElement('p');
 
                             // Set text content of each element
                             forecastH4.textContent = "12/5/23"
-                            forecastTemp.textContent = "Temp: "
-                            forecastWind.textContent = "Wind: "
-                            forecastHumidity.textContent = "Humidity: "
+                            forecastTempEl.textContent = "Temp: "
+                            forecastWindEl.textContent = "Wind: "
+                            forecastHumidityEl.textContent = "Humidity: "
 
                             // Append elements to the 5-Day Forecast container
                             forecastDiv.append(forecastH4);
-                            forecastDiv.append(forecastTemp);
-                            forecastDiv.append(forecastWind);
-                            forecastDiv.append(forecastHumidity);
+                            forecastDiv.append(forecastTempEl);
+                            forecastDiv.append(forecastWindEl);
+                            forecastDiv.append(forecastHumidityEl);
 
                             // Append the forecast container to the screen
                             forecastDetailContainer.append(forecastDiv)
